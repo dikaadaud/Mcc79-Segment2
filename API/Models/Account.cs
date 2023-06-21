@@ -1,15 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models
 {
     [Table("tb_m_accounts")]
-    public class Account
+    public class Account : BaseEntity
     {
-        [Key]
-        [Column("guid")]
-        public Guid Guid { get; set; }
-
         [Column("password", TypeName = "nvarchar(max)")]
         public string Password { get; set; }
 
@@ -17,18 +12,17 @@ namespace API.Models
         public bool IsDeleted { get; set; }
 
         [Column("otp")]
-        public int Otp { get; set; }
+        public int? Otp { get; set; }
 
         [Column("is_used")]
-        public bool IsUsed { get; set; }
+        public bool? IsUsed { get; set; }
 
         [Column("exprired_time")]
-        public DateTime ExpriedTime { get; set; }
+        public DateTime? ExpriedTime { get; set; }
 
-        [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        //Cardinality
+        public ICollection<AccountRole> AccountRoles { get; set; }
 
-        [Column("modified_date")]
-        public DateTime ModifiedDate { get; set; }
+        public virtual Employee Employee { get; set; }
     }
 }

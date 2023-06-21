@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API.Ultilities.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models
 {
     [Table("tb_m_employees")]
-    public class Employee
+    public class Employee : BaseEntity
     {
-        [Key]
-        [Column("guid")]
-        public Guid Guid { get; set; }
+
         [Column("nik", TypeName = "nchar(6)")]
         public string Nik { get; set; }
 
@@ -22,7 +20,7 @@ namespace API.Models
         public DateTime BirthDate { get; set; }
 
         [Column("gender")]
-        public int Gender { get; set; }
+        public GenderEnum Gender { get; set; }
 
         [Column("hiring_date")]
         public DateTime HiringDate { get; set; }
@@ -33,10 +31,11 @@ namespace API.Models
         [Column("phone_number", TypeName = "nvarchar(20)")]
         public string PhoneNumber { get; set; }
 
-        [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        // Cardinality
+        public virtual Account Account { get; set; }
 
-        [Column("modified_date")]
-        public DateTime ModifiedDate { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
+
+        public Education Education { get; set; }
     }
 }
