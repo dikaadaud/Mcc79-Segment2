@@ -54,18 +54,21 @@ namespace API.Data
                         .WithOne(room => room.Room)
                         .HasForeignKey(room => room.RoomGuid);
 
-            modelBuilder.Entity<Employee>()
-                        .HasOne(a => a.Account)
-                        .WithOne(e => e.Employee);
+            modelBuilder.Entity<Account>()
+                        .HasOne(e => e.Employee)
+                        .WithOne(a => a.Account)
+                        .HasForeignKey<Account>(a => a.Guid);
 
             modelBuilder.Entity<Employee>()
                         .HasMany(bk => bk.Bookings)
                         .WithOne(e => e.Employee)
                         .HasForeignKey(e => e.EmployeeGuid);
 
-            modelBuilder.Entity<Employee>()
-                        .HasOne(edu => edu.Education)
-                        .WithOne(e => e.Employee);
+            modelBuilder.Entity<Education>()
+                        .HasOne(e => e.Employee)
+                        .WithOne(edu => edu.Education)
+                        .HasForeignKey<Education>(edu => edu.Guid);
+
         }
     }
 }
