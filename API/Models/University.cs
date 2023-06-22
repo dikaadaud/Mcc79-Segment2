@@ -6,14 +6,14 @@ namespace API.Models
     public class University : BaseEntity
     {
 
-        [Column("code", TypeName = "varchar(50)")]
+        [Column("code", TypeName = "nvarchar(50)")]
         public string Code { get; set; }
 
-        [Column("name", TypeName = "varchar(100")]
+        [Column("name", TypeName = "nvarchar(100)")]
         public string Name { get; set; }
 
         // Cardinality
-        public ICollection<Education> Educations { get; set; }
+        public ICollection<Education>? Educations { get; set; }
 
 
     }

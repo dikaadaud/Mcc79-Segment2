@@ -12,17 +12,17 @@ namespace API.Models
         public bool IsDeleted { get; set; }
 
         [Column("otp")]
-        public int? Otp { get; set; }
+        public int Otp { get; set; }
 
         [Column("is_used")]
-        public bool? IsUsed { get; set; }
+        public bool IsUsed { get; set; }
 
         [Column("exprired_time")]
-        public DateTime? ExpriedTime { get; set; }
+        public DateTime ExpriedTime { get; set; }
 
         //Cardinality
-        public ICollection<AccountRole> AccountRoles { get; set; }
+        public ICollection<AccountRole>? AccountRoles { get; set; }
 
-        public virtual Employee Employee { get; set; }
+        public Employee? Employee { get; set; }
     }
 }

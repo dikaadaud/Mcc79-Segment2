@@ -32,10 +32,10 @@ namespace API.Models
         public string PhoneNumber { get; set; }
 
         // Cardinality
-        public virtual Account Account { get; set; }
+        public Account? Account { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
 
-        public Education Education { get; set; }
+        public Education? Education { get; set; }
     }
 }
