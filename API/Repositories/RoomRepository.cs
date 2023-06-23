@@ -4,78 +4,10 @@ using API.Models;
 
 namespace API.Repositories
 {
-    public class RoomRepository : IRoom
+    public class RoomRepository : GeneralRepository<Room>, IRoom
     {
-        private readonly BookingDbContext _context;
-
-        public RoomRepository(BookingDbContext context)
+        public RoomRepository(BookingDbContext context) : base(context)
         {
-            _context = context;
         }
-
-        public ICollection<Room> GetAll()
-        {
-            return _context.Set<Room>().ToList();
-        }
-
-        public Room? GetByGuid(Guid guid)
-        {
-            return _context.Set<Room>().Find(guid);
-        }
-
-        public Room Create(Room room)
-        {
-            try
-            {
-                _context.Set<Room>().Add(room);
-                _context.SaveChanges();
-                return room;
-            }
-            catch (Exception)
-            {
-
-                return new Room();
-            }
-
-        }
-
-        public bool Update(Room room)
-        {
-            try
-            {
-                _context.Set<Room>().Update(room);
-                _context.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool Delete(Guid guid)
-        {
-            var room = GetByGuid(guid);
-
-            if (room is null)
-            {
-                return false;
-            }
-            try
-            {
-                _context.Set<Room>().Remove(room);
-                _context.SaveChanges();
-                return true;
-
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
-
-        }
-
-
     }
 }

@@ -31,7 +31,7 @@ namespace API.Controllers
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(Guid guid)
         {
-            var role = _rolesRepository.GetById(guid);
+            var role = _rolesRepository.GetByGuid(guid);
             if (role is null)
             {
                 return NotFound();
