@@ -6,7 +6,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/AccountRoles")]
-    public class AccountRoleController : GeneralController<AccountRole>
+    public class AccountRoleController : GeneralController<IAccountRole, AccountRole>
     {
 
         public AccountRoleController(IAccountRole accountRole) : base(accountRole)

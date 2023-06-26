@@ -6,10 +6,8 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/Educations")]
-    public class EducationController : GeneralController<Education>
+    public class EducationController : GeneralController<IEducationRepository, Education>
     {
-        // private readonly IEducationRepository _edurep;
-
         public EducationController(IEducationRepository edurep) : base(edurep)
         {
 

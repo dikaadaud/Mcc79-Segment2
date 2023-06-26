@@ -6,13 +6,23 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UniversityController : GeneralController<University>
+    public class UniversityController : GeneralController<IUniversityRepository, University>
     {
-        // private readonly IUniversityRepository _repository;
-
-        public UniversityController(IUniversityRepository repository) : base(repository)
+        public UniversityController(IUniversityRepository generalRepository) : base(generalRepository)
         {
-            // _repository = repository;
+        }
+
+        [HttpGet("nama")]
+        public IActionResult GetByName(string name)
+        {
+
+            var nama = _generalRepository.GetByName(name);
+            if (nama == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(nama);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/Accounts")]
-    public class AccountController : GeneralController<Account>
+    public class AccountController : GeneralController<IAccountRepository, Account>
     {
         //private readonly IAccountRepository _accountRepository;
 

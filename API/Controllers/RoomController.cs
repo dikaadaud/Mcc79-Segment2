@@ -6,10 +6,8 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/Rooms")]
-    public class RoomController : GeneralController<Room>
+    public class RoomController : GeneralController<IRoom, Room>
     {
-
-
         public RoomController(IRoom iroom) : base(iroom)
         {
 

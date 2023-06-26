@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class GeneralController<TEntity> : ControllerBase
+    public class GeneralController<TRepo, TEntity> : ControllerBase
         where TEntity : class
+        where TRepo : IGeneralRepository<TEntity>
     {
-        protected readonly IGeneralRepository<TEntity> _generalRepository;
+        protected readonly TRepo _generalRepository;
 
-        public GeneralController(IGeneralRepository<TEntity> generalRepository)
+        public GeneralController(TRepo generalRepository)
         {
             _generalRepository = generalRepository;
         }
@@ -68,5 +69,6 @@ namespace API.Controllers
             }
             return Ok();
         }
+
     }
 }
