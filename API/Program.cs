@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.Data;
 using API.Repositories;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace API
@@ -19,7 +20,7 @@ namespace API
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<BookingDbContext>(options => options.UseSqlServer(connectionString));
 
-            // add Repository to 
+            // add Repository to HTTP 
             builder.Services.AddScoped<IUniversityRepository, UniverisityRepository>();
             builder.Services.AddScoped<IRoom, RoomRepository>();
             builder.Services.AddScoped<IRolesRepository, RoleRepository>();
@@ -28,6 +29,9 @@ namespace API
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IEducationRepository, EducationRepository>();
+
+            //add Service to Htp
+            builder.Services.AddScoped<UniversityService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

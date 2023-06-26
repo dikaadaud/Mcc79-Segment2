@@ -28,16 +28,11 @@ namespace API.Repositories
             }
         }
 
-        public bool Delete(Guid guid)
+        public bool Delete(TEntity entities)
         {
-            var entity = GetByGuid(guid);
-            if (entity is null)
-            {
-                return false;
-            }
             try
             {
-                _context.Set<TEntity>().Remove(entity);
+                _context.Set<TEntity>().Remove(entities);
                 _context.SaveChanges();
                 return true;
             }
@@ -54,7 +49,10 @@ namespace API.Repositories
 
         public TEntity? GetByGuid(Guid guid)
         {
-            return _context.Set<TEntity>().Find(guid);
+
+            var entity = _context.Set<TEntity>().Find(guid);
+            _context.ChangeTracker.Clear();
+            return entity;
         }
 
         public bool Update(TEntity entity)
@@ -70,6 +68,12 @@ namespace API.Repositories
                 return false;
                 throw;
             }
+        }
+
+        public bool isExist(Guid guid)
+        {
+
+            return GetByGuid(guid) is not null;
         }
     }
 }
