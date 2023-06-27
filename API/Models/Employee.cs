@@ -37,5 +37,8 @@ namespace API.Models
         public ICollection<Booking>? Bookings { get; set; }
 
         public Education? Education { get; set; }
+
+
+
     }
 }

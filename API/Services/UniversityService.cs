@@ -129,7 +129,7 @@ namespace API.Services
                 Name = updateUniversityDto.Name,
                 Guid = updateUniversityDto.Guid,
                 ModifiedDate = DateTime.Now,
-                CreatedDate = getUniversity.CreatedDate
+                CreatedDate = getUniversity!.CreatedDate
             };
 
             var isUpdate = _repository.Update(univ);

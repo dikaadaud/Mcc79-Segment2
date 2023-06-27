@@ -71,7 +71,7 @@ namespace API.Services
                 Guid = new Guid(),
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now,
-                Nik = newEmployee.Nik,
+                Nik = GenerateNIK(),
                 Gender = newEmployee.Gender,
                 FirstName = newEmployee.FirstName,
                 LastName = newEmployee.LastName,
@@ -118,13 +118,14 @@ namespace API.Services
             {
                 Guid = updateEmpDto.Guid,
                 FirstName = updateEmpDto.FirstName,
+                Nik = updateEmpDto.Nik,
                 LastName = updateEmpDto.LastName,
                 Gender = updateEmpDto.Gender,
                 BirthDate = updateEmpDto.BirthDate,
                 Email = updateEmpDto.Email,
                 PhoneNumber = updateEmpDto.PhoneNumber,
                 ModifiedDate = DateTime.Now,
-                CreatedDate = getEmp.CreatedDate,
+                CreatedDate = getEmp!.CreatedDate,
                 HiringDate = updateEmpDto.HiringDate
 
             };
@@ -152,5 +153,23 @@ namespace API.Services
             }
             return 1;
         }
+
+        public string GenerateNIK()
+        {
+            var getEmpo = _repository.GetAll();
+
+            if (getEmpo.Count == 0)
+            {
+                return $"AT/{getEmpo.Count + 1}";
+
+            }
+            else
+            {
+                var lastData = getEmpo.LastOrDefault();
+                string newNik = (int.Parse(lastData.Nik) + 1).ToString().Substring(3);
+                return newNik;
+            }
+        }
+
     }
 }

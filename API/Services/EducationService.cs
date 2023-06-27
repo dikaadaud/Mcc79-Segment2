@@ -105,7 +105,7 @@ namespace API.Services
                 Degree = updateEduDto.Degree,
                 Major = updateEduDto.Major,
                 Gpa = updateEduDto.Gpa,
-                CreatedDate = getEdu.CreatedDate,
+                CreatedDate = getEdu!.CreatedDate,
                 ModifiedDate = DateTime.Now,
                 UniversityGuid = updateEduDto.UniversityGuid
 

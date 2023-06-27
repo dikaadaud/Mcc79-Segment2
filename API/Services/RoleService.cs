@@ -91,7 +91,7 @@ namespace API.Services
                 Name = updateRoleDto.Name,
                 Guid = updateRoleDto.Guid,
                 ModifiedDate = DateTime.Now,
-                CreatedDate = getRole.CreatedDate
+                CreatedDate = getRole!.CreatedDate
             };
 
             var isUpdate = _repository.Update(roles);

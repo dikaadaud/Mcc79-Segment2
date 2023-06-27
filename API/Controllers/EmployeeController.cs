@@ -22,7 +22,7 @@ namespace API.Controllers
         {
             var entities = _service.GetEmployee();
 
-            if (!entities.Any())
+            if (entities is null)
             {
                 return NotFound(new ResponseHandler<GetEmployeeDto>
                 {

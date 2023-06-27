@@ -1,6 +1,7 @@
 ﻿using API.Contracts;
 using API.DTOs.Account;
 using API.Models;
+using API.Ultilities.Enum;
 
 namespace API.Services
 {
@@ -69,7 +70,7 @@ namespace API.Services
                 ExpriedTime = newAccount.ExpiredTime,
                 IsDeleted = newAccount.IsDeleted,
                 IsUsed = newAccount.IsUsed,
-                Password = newAccount.Password
+                Password = Hashing.HashPassword(newAccount.Password)
 
             };
 
@@ -109,7 +110,7 @@ namespace API.Services
                 IsDeleted = updateAccDto.IsDeleted,
                 IsUsed = updateAccDto.IsUsed,
                 Otp = getAcc.Otp,
-                Password = updateAccDto.Password,
+                Password = Hashing.HashPassword(updateAccDto.Password),
                 CreatedDate = getAcc.CreatedDate,
                 ModifiedDate = DateTime.Now
 

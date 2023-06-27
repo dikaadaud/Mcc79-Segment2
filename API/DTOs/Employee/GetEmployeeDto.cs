@@ -15,4 +15,5 @@ namespace API.DTOs.Employee
         public string PhoneNumber { get; set; }
 
     }
+
 }
