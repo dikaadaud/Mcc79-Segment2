@@ -32,6 +32,13 @@ namespace API
 
             //add Service to Htp
             builder.Services.AddScoped<UniversityService>();
+            builder.Services.AddScoped<RoleService>();
+            builder.Services.AddScoped<RoomService>();
+            builder.Services.AddScoped<AccountRoleService>();
+            builder.Services.AddScoped<EmployeeeService>();
+            builder.Services.AddScoped<BookingService>();
+            builder.Services.AddScoped<EducationService>();
+            builder.Services.AddScoped<AccountService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
