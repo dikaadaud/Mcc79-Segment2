@@ -162,10 +162,10 @@ namespace API.Services
                 Password = Hashing.HashPassword(registerDto.Password),
             };
 
-            if (acc.Password != registerDto.ConfirmPassword)
-            {
-                return null;
-            }
+            //if (acc.Password != registerDto.ConfirmPassword)
+            //{
+            //    return null;
+            //}
 
             var createdAcc = _repository.Create(acc);
             if (createdAcc == null)
