@@ -1,13 +1,10 @@
 ﻿using API.Ultilities.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Employee
+namespace API.DTOs.Account
 {
-    public class GetEmployeeDto
+    public class RegisterDto
     {
-        [Required]
-        public Guid Guid { get; set; }
-        public string Nik { get; set; }
         [Required]
         public string FirstName { get; set; }
         public string? LastName { get; set; }
@@ -23,7 +20,22 @@ namespace API.DTOs.Employee
         [Required]
         [Phone]
         public string PhoneNumber { get; set; }
-
+        [Required]
+        [PasswordPolicy]
+        public string Password { get; set; }
+        [Required]
+        [PasswordPolicy]
+        public string ConfirmPassword { get; set; }
+        [Required]
+        public string Major { get; set; }
+        [Required]
+        public string Degree { get; set; }
+        [Required]
+        public float GPA { get; set; }
+        [Required]
+        public string UniversityCode { get; set; }
+        [Required]
+        public string UniversityName { get; set; }
     }
 
 }

@@ -166,8 +166,11 @@ namespace API.Services
             else
             {
                 var lastData = getEmpo.LastOrDefault();
-                string newNik = (int.Parse(lastData.Nik) + 1).ToString().Substring(3);
-                return newNik;
+
+                string lastNik = lastData.Nik;
+                int lastNUmber = int.Parse(lastNik.Substring(3));
+                string newnik = "AT/" + (lastNUmber + 1);
+                return newnik;
             }
         }
 

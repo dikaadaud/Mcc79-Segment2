@@ -144,5 +144,30 @@ namespace API.Controllers
                 Message = "Succesfull Delete"
             });
         }
+
+        [HttpPost("register")]
+        public IActionResult Register(RegisterDto registerDto)
+        {
+            var entities = _service.RegisterAccount(registerDto);
+            if (entities is null)
+            {
+                return BadRequest(new ResponseHandler<RegisterDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Failed To Register",
+                });
+            }
+            return Ok(new ResponseHandler<RegisterDto>
+            {
+                Code = StatusCodes.Status201Created,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Success to create",
+                Data = entities
+            });
+        }
+
     }
 }
+
+

@@ -22,7 +22,6 @@ namespace API.DTOs.Account
         public bool IsUsed { get; set; }
 
         [Required]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime ExpiredTime { get; set; }
     }
 }
