@@ -167,6 +167,48 @@ namespace API.Controllers
             });
         }
 
+        [HttpPost("Login")]
+        public IActionResult LoginRequest(Login login)
+        {
+            var entities = new Login();
+
+            try
+            {
+                entities = _service.Login(login);
+            }
+            catch (Exception x)
+            {
+                if (x.Message.ToLower().Contains("not found"))
+                {
+                    return NotFound(new ResponseHandler<Login>
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = x.Message
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ResponseHandler<Login>
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = x.Message
+                    });
+                }
+
+            }
+            return Ok(new ResponseHandler<Login>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Success to Login",
+                Data = entities
+            });
+
+
+        }
+
     }
 }
 

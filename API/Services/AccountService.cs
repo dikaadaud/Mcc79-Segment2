@@ -162,11 +162,6 @@ namespace API.Services
                 Password = Hashing.HashPassword(registerDto.Password),
             };
 
-            //if (acc.Password != registerDto.ConfirmPassword)
-            //{
-            //    return null;
-            //}
-
             var createdAcc = _repository.Create(acc);
             if (createdAcc == null)
             {
@@ -221,7 +216,6 @@ namespace API.Services
                 UniversityName = createUniv.Name
             };
 
-
             return toDto;
         }
 
@@ -239,6 +233,30 @@ namespace API.Services
                 return 0;
             }
             return 1;
+        }
+
+        public Login? Login(Login login)
+        {
+            var emailEmp = _employeeRepository.GetEmail(login.Email);
+            if (emailEmp == null)
+            {
+                throw new Exception("Email is not Found !");
+            }
+
+            var pass = _repository.GetByGuid(emailEmp.Guid);
+            var isValid = Hashing.ValidatePassword(login.Password, pass!.Password);
+            if (!isValid)
+            {
+                throw new Exception("Password Not match");
+            }
+
+            var toDto = new Login
+            {
+                Email = login.Email,
+                Password = login.Password,
+            };
+
+            return toDto;
         }
     }
 }

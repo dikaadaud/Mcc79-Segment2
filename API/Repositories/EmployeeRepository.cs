@@ -9,5 +9,10 @@ namespace API.Repositories
         public EmployeeRepository(BookingDbContext context) : base(context)
         {
         }
+
+        public Employee? GetEmail(string email)
+        {
+            return _context.Set<Employee>().SingleOrDefault(e => e.Email == email);
+        }
     }
 }

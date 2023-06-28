@@ -23,14 +23,17 @@ namespace API.DTOs.Account
         [Required]
         [PasswordPolicy]
         public string Password { get; set; }
-        [Required]
+        [Required(ErrorMessage = ("Password not Match"))]
         [PasswordPolicy]
+        [DataType(DataType.Password)]
+        [Compare("Password")]
         public string ConfirmPassword { get; set; }
         [Required]
         public string Major { get; set; }
         [Required]
         public string Degree { get; set; }
         [Required]
+        [Range(0, 4, ErrorMessage = "Gpa Must 0 - 4")]
         public float GPA { get; set; }
         [Required]
         public string UniversityCode { get; set; }
