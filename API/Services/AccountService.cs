@@ -240,14 +240,14 @@ namespace API.Services
             var emailEmp = _employeeRepository.GetEmail(login.Email);
             if (emailEmp == null)
             {
-                throw new Exception("Email is not Found !");
+                throw new Exception("Account Not Found!");
             }
 
             var pass = _repository.GetByGuid(emailEmp.Guid);
             var isValid = Hashing.ValidatePassword(login.Password, pass!.Password);
             if (!isValid)
             {
-                throw new Exception("Password Not match");
+                throw new Exception("Password Invalid!");
             }
 
             var toDto = new Login
