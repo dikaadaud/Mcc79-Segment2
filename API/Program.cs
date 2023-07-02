@@ -2,6 +2,7 @@ using API.Contracts;
 using API.Data;
 using API.Repositories;
 using API.Services;
+using API.Ultilities.Handler;
 using Microsoft.EntityFrameworkCore;
 
 namespace API
@@ -40,6 +41,15 @@ namespace API
             builder.Services.AddScoped<EducationService>();
             builder.Services.AddScoped<AccountService>();
 
+            //handler
+            builder.Services.AddScoped<ITokenHandler, TokenHandler>();
+            builder.Services.AddTransient<IEmailHandler, EmailHandler>(_ => new EmailHandler
+                (
+                    builder.Configuration["EmailService:SmtpServer"],
+                    int.Parse(builder.Configuration["EmailService:SmtpPort"]),
+                    builder.Configuration["EmailService:FromEmailAddress"]
+                ));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -56,7 +66,6 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

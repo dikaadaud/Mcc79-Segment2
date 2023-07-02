@@ -7,7 +7,7 @@ namespace API.Services
     public class RoomService
     {
         private readonly IRoom _repository;
-
+        private readonly IBookingRepository _bookingRepository;
         public RoomService(IRoom repository)
         {
             _repository = repository;
@@ -126,6 +126,49 @@ namespace API.Services
                 return 0;
             }
             return 1;
+        }
+
+        public IEnumerable<RoomNotUseDto> GetRoomNotUse()
+        {
+            var room = _repository.GetAll();
+            if (room == null)
+            {
+                return null;
+            }
+            var detailsRooms = from r in _repository.GetAll()
+                               join b in _bookingRepository.GetAll() on r.Guid equals b.RoomGuid
+                               where b.StartDate <= DateTime.Now && b.EndDate >= DateTime.Now
+                               select (new RoomNotUseDto
+                               {
+                                   Capacity = r.Capacity,
+                                   Floor = r.Floor,
+                                   RoomGuid = r.Guid,
+                                   RoomName = r.Name
+                               });
+            List<Room> tmpRoom = new List<Room>(room);
+
+            foreach (var r in room)
+            {
+                foreach (var usedRoom in detailsRooms)
+                {
+                    if (r.Guid == usedRoom.RoomGuid)
+                    {
+                        tmpRoom.Remove(r);
+                        break;
+                    }
+                }
+            }
+
+            var unUsed = from r in tmpRoom
+                         select (new RoomNotUseDto
+                         {
+                             RoomGuid = r.Guid,
+                             RoomName = r.Name,
+                             Capacity = r.Capacity,
+                             Floor = r.Floor,
+                         });
+
+            return unUsed;
         }
     }
 }

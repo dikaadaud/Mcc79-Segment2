@@ -2,6 +2,7 @@
 using API.DTOs.Account;
 using API.Models;
 using API.Ultilities.Enum;
+using System.Security.Claims;
 
 namespace API.Services
 {
@@ -11,15 +12,18 @@ namespace API.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IEducationRepository _educationRepository;
         private readonly IUniversityRepository _universityRepository;
+        private readonly ITokenHandler _tokenHandler;
+        private readonly IEmailHandler _emailHandler;
 
-        public AccountService(IAccountRepository repository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository)
+        public AccountService(IAccountRepository repository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, ITokenHandler tokenHandler, IEmailHandler emailHandler)
         {
             _repository = repository;
             _employeeRepository = employeeRepository;
             _educationRepository = educationRepository;
             _universityRepository = universityRepository;
+            _tokenHandler = tokenHandler;
+            _emailHandler = emailHandler;
         }
-
 
         public IEnumerable<GetAccountDto>? GetAccount()
         {
@@ -235,28 +239,114 @@ namespace API.Services
             return 1;
         }
 
-        public Login? Login(Login login)
+        public string Login(Login login)
         {
             var emailEmp = _employeeRepository.GetEmail(login.Email);
             if (emailEmp == null)
             {
-                throw new Exception("Account Not Found!");
+                return "0";
             }
 
             var pass = _repository.GetByGuid(emailEmp.Guid);
             var isValid = Hashing.ValidatePassword(login.Password, pass!.Password);
             if (!isValid)
             {
-                throw new Exception("Password Invalid!");
+                return "-1";
             }
 
-            var toDto = new Login
+            var claims = new List<Claim>()
             {
-                Email = login.Email,
-                Password = login.Password,
+                new Claim("Nik",emailEmp.Nik),
+                new Claim("Fullname", $"{emailEmp.FirstName} {emailEmp.LastName}"),
+                new Claim("Email",emailEmp.Email)
             };
 
-            return toDto;
+
+            try
+            {
+                var getToken = _tokenHandler.GenerateToken(claims);
+                return getToken;
+            }
+            catch (Exception)
+            {
+
+                return "-2";
+            }
         }
+
+        public int ForgotPassword(ForgotPasswordDto forgotPassword)
+        {
+            var employee = _employeeRepository.GetEmail(forgotPassword.Email);
+            if (employee is null)
+                return 0; // Email not found
+
+            var account = _repository.GetByGuid(employee.Guid);
+            if (account is null)
+                return -1;
+
+            var otp = new Random().Next(111111, 999999);
+            var isUpdated = _repository.Update(new Account
+            {
+                Guid = account.Guid,
+                Password = account.Password,
+                IsDeleted = account.IsDeleted,
+                Otp = otp,
+                ExpriedTime = DateTime.Now.AddMinutes(5),
+                IsUsed = false,
+                CreatedDate = account.CreatedDate,
+                ModifiedDate = DateTime.Now
+            });
+            if (!isUpdated)
+                return -1;
+
+            _emailHandler.sendEmail(forgotPassword.Email,
+                                    "Forgot Password",
+                                    $"Your OTP is {otp}");
+
+            return 1;
+        }
+
+        public int ChangePassword(ChangePasswordDto changePassword)
+        {
+
+            var isExist = _employeeRepository.getEmailandPhone(changePassword.Email);
+            if (isExist == null)
+            {
+                return -1;
+            }
+            var getAccount = _repository.GetByGuid(isExist.Guid);
+            if (getAccount.Otp != changePassword.Otp)
+            {
+                return 0;
+            }
+            if (getAccount.IsUsed == true)
+            {
+                return 1;
+            }
+            if (getAccount.ExpriedTime < DateTime.Now)
+            {
+                return 2;
+            }
+            var account = new Account
+            {
+                Guid = getAccount.Guid,
+                IsUsed = getAccount.IsUsed,
+                IsDeleted = getAccount.IsDeleted,
+                ModifiedDate = DateTime.Now,
+                CreatedDate = getAccount.CreatedDate,
+                Otp = getAccount.Otp,
+                ExpriedTime = getAccount.ExpriedTime,
+                Password = Hashing.HashPassword(changePassword.NewPassword)
+            };
+            var isUpdate = _repository.Update(account);
+            if (!isUpdate)
+            {
+                return 0;
+            }
+
+
+            return 3;
+        }
+
     }
 }

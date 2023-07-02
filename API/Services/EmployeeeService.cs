@@ -7,12 +7,21 @@ namespace API.Services
     public class EmployeeeService
     {
         private readonly IEmployeeRepository _repository;
+        private readonly IEducationRepository _educationRepository;
+        private readonly IUniversityRepository _universityRepository;
+        private IEmployeeRepository employeeRepository;
 
-        public EmployeeeService(IEmployeeRepository repository)
+        public EmployeeeService(IEmployeeRepository repository, IEducationRepository educationRepository, IUniversityRepository universityRepository)
         {
             _repository = repository;
+            _educationRepository = educationRepository;
+            _universityRepository = universityRepository;
         }
 
+        public EmployeeeService(IEmployeeRepository employeeRepository)
+        {
+            this.employeeRepository = employeeRepository;
+        }
 
         public IEnumerable<GetEmployeeDto>? GetEmployee()
         {
@@ -172,6 +181,39 @@ namespace API.Services
                 string newnik = "AT/" + (lastNUmber + 1);
                 return newnik;
             }
+        }
+
+        public IEnumerable<EmployeEducationDto> GetMaster()
+        {
+            var master = from e in _repository.GetAll()
+                         join edu in _educationRepository.GetAll() on e.Guid equals edu.Guid
+                         join u in _universityRepository.GetAll() on edu.UniversityGuid equals u.Guid
+                         select (new EmployeEducationDto
+                         {
+                             Guid = e.Guid,
+                             Fullname = e.FirstName + e.LastName,
+                             BirthDate = e.BirthDate,
+                             Email = e.Email,
+                             Phone = e.PhoneNumber,
+                             Gender = e.Gender,
+                             Nik = e.Nik,
+                             HiringDate = e.HiringDate,
+                             Degree = edu.Degree,
+                             Gpa = edu.Gpa,
+                             Major = edu.Major,
+                             UniversityName = u.Name
+                         });
+
+            return master;
+        }
+
+        public EmployeEducationDto? GetMasterByGuid(Guid guid)
+        {
+            var getMaster = GetMaster();
+
+            var getMasterByGuid = getMaster.FirstOrDefault(m => m.Guid == guid);
+
+            return getMasterByGuid;
         }
 
     }

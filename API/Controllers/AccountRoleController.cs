@@ -22,7 +22,7 @@ namespace API.Controllers
         {
             var entities = _service.GetAccountRole();
 
-            if (!entities.Any())
+            if (entities == null)
             {
                 return NotFound(new ResponseHandler<GetAccountRoleDto>
                 {

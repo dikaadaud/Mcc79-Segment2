@@ -144,5 +144,31 @@ namespace API.Controllers
                 Message = "Succesfull Delete"
             });
         }
+
+        [HttpGet("RoomUnUsed")]
+        public IActionResult GetUnuseRoom()
+        {
+            var unUsed = _service.GetRoomNotUse();
+            if (unUsed.Count() == 0)
+            {
+                return Ok(new ResponseHandler<IEnumerable<RoomNotUseDto>>
+                {
+                    Code = StatusCodes.Status200OK,
+                    Status = HttpStatusCode.OK.ToString(),
+                    Message = "All Room are being use",
+                    Data = unUsed
+                });
+            }
+            else
+            {
+                return Ok(new ResponseHandler<IEnumerable<RoomNotUseDto>>
+                {
+                    Code = StatusCodes.Status200OK,
+                    Status = HttpStatusCode.OK.ToString(),
+                    Message = "Data Found !!",
+                    Data = unUsed
+                });
+            }
+        }
     }
 }

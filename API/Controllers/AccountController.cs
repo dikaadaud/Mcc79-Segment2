@@ -11,10 +11,10 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly AccountService _service;
-
         public AccountController(AccountService service)
         {
             _service = service;
+
         }
 
         [HttpGet]
@@ -170,40 +170,84 @@ namespace API.Controllers
         [HttpPost("Login")]
         public IActionResult LoginRequest(Login login)
         {
-            var entities = new Login();
+            var entities = _service.Login(login);
 
-            try
+            if (entities == "-1")
             {
-                entities = _service.Login(login);
+                return NotFound(new ResponseHandler<Login>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Data Not Found"
+                });
             }
-            catch (Exception x)
+            if (entities == "0")
             {
-                if (x.Message.ToLower().Contains("not found"))
+                return BadRequest(new ResponseHandler<Login>
                 {
-                    return NotFound(new ResponseHandler<Login>
-                    {
-                        Code = StatusCodes.Status404NotFound,
-                        Status = HttpStatusCode.BadRequest.ToString(),
-                        Message = x.Message
-                    });
-                }
-                else
+                    Code = StatusCodes.Status400BadRequest,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Bad Request"
+                });
+            }
+            if (entities == "-2")
+            {
+                return BadRequest(new ResponseHandler<Login>
                 {
-                    return BadRequest(new ResponseHandler<Login>
-                    {
-                        Code = StatusCodes.Status400BadRequest,
-                        Status = HttpStatusCode.BadRequest.ToString(),
-                        Message = x.Message
-                    });
-                }
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Data Error"
+                });
+            }
 
-            }
-            return Ok(new ResponseHandler<Login>
+            return Ok(new ResponseHandler<string>
             {
                 Code = StatusCodes.Status200OK,
                 Status = HttpStatusCode.OK.ToString(),
                 Message = "Success to Login",
                 Data = entities
+            });
+
+
+        }
+
+        [HttpPut("ChangePassword")]
+        public IActionResult ChangePassword(ChangePasswordDto changePassword)
+        {
+            var update = _service.ChangePassword(changePassword);
+            if (update == 0)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Email Not Found"
+                });
+            }
+            if (update == 1)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Otp Has been Used"
+                });
+            }
+            if (update == 2)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Email Not Found"
+                });
+            }
+
+            return Ok(new ResponseHandler<ChangePasswordDto>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Success Updated",
             });
 
 
