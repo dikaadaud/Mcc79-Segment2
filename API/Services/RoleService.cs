@@ -54,7 +54,7 @@ namespace API.Services
         {
             var roles = new Role
             {
-                Name = newRole.Name ?? "User",
+                Name = newRole.Name,
                 Guid = new Guid(),
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now,

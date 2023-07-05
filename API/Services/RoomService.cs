@@ -9,11 +9,12 @@ namespace API.Services
     {
         private readonly IRoom _repository;
         private readonly IBookingRepository _bookingRepository;
-        public RoomService(IRoom repository)
+
+        public RoomService(IRoom repository, IBookingRepository bookingRepository)
         {
             _repository = repository;
+            _bookingRepository = bookingRepository;
         }
-
 
         public IEnumerable<GetRoomDto>? GetRoom()
         {
@@ -129,29 +130,40 @@ namespace API.Services
             return 1;
         }
 
-        public IEnumerable<RoomNotUseDto> GetRoomNotUse()
+        public IEnumerable<RoomNotUseDto>? GetRoomNotUse()
         {
-            var room = _repository.GetAll().ToList();
+            var rooms = _repository.GetAll().ToList();
 
-            var detailsRooms = (from r in _repository.GetAll()
-                                join b in _bookingRepository.GetAll()
-                                on r.Guid equals b.RoomGuid
-                                where b.Status == StatusLevel.OnGoing
-                                select new RoomNotUseDto
-                                {
-                                    Capacity = r.Capacity,
-                                    Floor = r.Floor,
-                                    RoomGuid = r.Guid,
-                                    RoomName = r.Name
-                                });
+            if (rooms is null)
+            {
+                return null;
+            }
 
-            List<Room> tmpRoom = new List<Room>(room);
+            var bookings = _bookingRepository.GetAll().ToList();
+            if (bookings is null)
+            {
+                return null;
+            }
+            var detailsRooms = from r in _repository.GetAll()
+                               join b in _bookingRepository.GetAll()
+                               on r.Guid equals b.RoomGuid
+                               where b.Status == StatusLevel.OnGoing
+                               select new GetRoomDto
+                               {
+                                   Guid = r.Guid,
+                                   Capacity = r.Capacity,
+                                   floor = r.Floor,
+                                   Name = r.Name,
 
-            foreach (var r in room)
+                               };
+
+            List<Room> tmpRoom = new List<Room>(rooms);
+
+            foreach (var r in rooms)
             {
                 foreach (var usedRoom in detailsRooms)
                 {
-                    if (r.Guid == usedRoom.RoomGuid)
+                    if (r.Guid == usedRoom.Guid)
                     {
                         tmpRoom.Remove(r);
                         break;

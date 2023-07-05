@@ -14,8 +14,10 @@ namespace API.Services
         private readonly IUniversityRepository _universityRepository;
         private readonly ITokenHandler _tokenHandler;
         private readonly IEmailHandler _emailHandler;
+        private readonly IRolesRepository _roleRepository;
+        private readonly IAccountRole _accountRoleRepository;
 
-        public AccountService(IAccountRepository repository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, ITokenHandler tokenHandler, IEmailHandler emailHandler)
+        public AccountService(IAccountRepository repository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, ITokenHandler tokenHandler, IEmailHandler emailHandler, IRolesRepository roleRepository, IAccountRole accountRoleRepository)
         {
             _repository = repository;
             _employeeRepository = employeeRepository;
@@ -23,6 +25,8 @@ namespace API.Services
             _universityRepository = universityRepository;
             _tokenHandler = tokenHandler;
             _emailHandler = emailHandler;
+            _roleRepository = roleRepository;
+            _accountRoleRepository = accountRoleRepository;
         }
 
         public IEnumerable<GetAccountDto>? GetAccount()
@@ -219,6 +223,13 @@ namespace API.Services
                 UniversityCode = createUniv.Code,
                 UniversityName = createUniv.Name
             };
+
+            var getRoleUser = _roleRepository.GetByName("User");
+            _accountRoleRepository.Create(new AccountRole
+            {
+                AccountGuid = acc.Guid,
+                RoleGuid = getRoleUser!.Guid
+            });
 
             return toDto;
         }

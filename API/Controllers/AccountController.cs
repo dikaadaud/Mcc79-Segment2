@@ -1,6 +1,7 @@
 ﻿using API.DTOs.Account;
 using API.Services;
 using API.Ultilities.Handler;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -8,6 +9,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/Accounts")]
+    [Authorize(Roles = $"admin")]
     public class AccountController : ControllerBase
     {
         private readonly AccountService _service;
