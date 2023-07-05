@@ -171,29 +171,29 @@ namespace API.Controllers
             }
         }
 
-        public IActionResult GetMasterByGuid(Guid guid)
-        {
-            var master = _service.GetMasterByGuid(guid);
-            if (master == null)
-            {
-                return NotFound(new ResponseHandler<EmployeEducationDto>
-                {
-                    Code = StatusCodes.Status404NotFound,
-                    Status = HttpStatusCode.NotFound.ToString(),
-                    Message = "ID not found"
-                });
-            }
-            else
-            {
-                return Ok(new ResponseHandler<EmployeEducationDto>
-                {
-                    Code = StatusCodes.Status200OK,
-                    Status = HttpStatusCode.OK.ToString(),
-                    Message = "Data Found !!",
-                    Data = master
-                });
-            }
-        }
+        //public IActionResult GetMasterByGuid(Guid guid)
+        //{
+        //    var master = _service.GetMasterByGuid(guid);
+        //    if (master == null)
+        //    {
+        //        return NotFound(new ResponseHandler<EmployeEducationDto>
+        //        {
+        //            Code = StatusCodes.Status404NotFound,
+        //            Status = HttpStatusCode.NotFound.ToString(),
+        //            Message = "ID not found"
+        //        });
+        //    }
+        //    else
+        //    {
+        //        return Ok(new ResponseHandler<EmployeEducationDto>
+        //        {
+        //            Code = StatusCodes.Status200OK,
+        //            Status = HttpStatusCode.OK.ToString(),
+        //            Message = "Data Found !!",
+        //            Data = master
+        //        });
+        //    }
+        //}
 
 
     }

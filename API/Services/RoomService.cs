@@ -1,6 +1,7 @@
 ﻿using API.Contracts;
 using API.DTOs.Room;
 using API.Models;
+using API.Ultilities.Enum;
 
 namespace API.Services
 {
@@ -130,21 +131,20 @@ namespace API.Services
 
         public IEnumerable<RoomNotUseDto> GetRoomNotUse()
         {
-            var room = _repository.GetAll();
-            if (room == null)
-            {
-                return null;
-            }
-            var detailsRooms = from r in _repository.GetAll()
-                               join b in _bookingRepository.GetAll() on r.Guid equals b.RoomGuid
-                               where b.StartDate <= DateTime.Now && b.EndDate >= DateTime.Now
-                               select (new RoomNotUseDto
-                               {
-                                   Capacity = r.Capacity,
-                                   Floor = r.Floor,
-                                   RoomGuid = r.Guid,
-                                   RoomName = r.Name
-                               });
+            var room = _repository.GetAll().ToList();
+
+            var detailsRooms = (from r in _repository.GetAll()
+                                join b in _bookingRepository.GetAll()
+                                on r.Guid equals b.RoomGuid
+                                where b.Status == StatusLevel.OnGoing
+                                select new RoomNotUseDto
+                                {
+                                    Capacity = r.Capacity,
+                                    Floor = r.Floor,
+                                    RoomGuid = r.Guid,
+                                    RoomName = r.Name
+                                });
+
             List<Room> tmpRoom = new List<Room>(room);
 
             foreach (var r in room)
